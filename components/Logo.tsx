@@ -1,12 +1,22 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { cn } from "@/lib/cn";
 import { site } from "@/lib/site";
 
+/**
+ * public/images/logo.png is 406×233 — an aspect ratio with no whole-pixel
+ * rendering at these sizes. So next/image gets the true intrinsic dimensions
+ * and CSS does the scaling (`w-*` plus `h-auto`), which is the pattern
+ * next/image expects; passing rounded width/height instead makes it warn that
+ * one dimension was modified without the other.
+ */
+const INTRINSIC = { width: 406, height: 233 } as const;
+
 const sizes = {
-  sm: { width: 104, height: 60 },
-  md: { width: 148, height: 85 },
-  lg: { width: 208, height: 119 },
+  sm: { css: "w-[104px]", hint: 104 },
+  md: { css: "w-[148px]", hint: 148 },
+  lg: { css: "w-[208px]", hint: 208 },
 } as const;
 
 type LogoProps = {
@@ -22,17 +32,17 @@ type LogoProps = {
  * tools/extract_assets.py so it keeps its pink outline over any pink surface.
  */
 export function Logo({ size = "md", asLink = true, className, priority }: LogoProps) {
-  const { width, height } = sizes[size];
+  const { css, hint } = sizes[size];
 
   const mark = (
     <Image
       src="/images/logo.png"
       alt={`${site.name} — ${site.tagline}`}
-      width={width}
-      height={height}
+      width={INTRINSIC.width}
+      height={INTRINSIC.height}
       priority={priority}
-      className={className}
-      sizes={`${width}px`}
+      className={cn(css, "h-auto", className)}
+      sizes={`${hint}px`}
     />
   );
 

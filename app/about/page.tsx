@@ -78,6 +78,8 @@ export default function AboutPage() {
                 alt="Two Tezzy drinks side by side, each with a plush friend clipped to the cup"
                 width={1000}
                 height={820}
+                // Above the fold on desktop — this is the page's LCP element.
+                priority
                 sizes="(max-width: 1024px) 100vw, 45vw"
                 className="h-full w-full object-cover"
               />
