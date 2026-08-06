@@ -1,0 +1,149 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Tezzy design tokens.
+   Every colour below was sampled directly from reference/original-mockup.png,
+   so the palette is the mockup's palette. Mirrored in lib/brand.ts for the few
+   places that need these values in TypeScript.
+--------------------------------------------------------------------------- */
+@theme {
+  --color-cream: #fdf4f2; /* page base */
+  --color-blush: #fce9e7; /* alternating section tint */
+  --color-shell: #fdf1ef; /* cards on cream */
+  --color-petal: #fde1e1; /* soft fills, strips, chips */
+  --color-candy: #f9a8b0; /* the mockup's brand rose — decorative only */
+  --color-candy-soft: #fbc7cc;
+
+  /* Text and buttons use a deeper rose than the mockup's #f9a8b0.
+     White on #f9a8b0 measures 1.87:1 and #e4646e text on cream measures
+     3.06:1 — both well under the 4.5:1 WCAG AA floor for body-size text.
+     #c0395a keeps the same hue family and clears AA on every surface the
+     site actually puts it on:
+       white on berry 5.28 · berry on cream 4.88 · shell 4.78 · blush 4.52
+     (berry on petal is 4.29, so chips on petal use cocoa instead.)
+     Every non-text use of the rose — hearts, icons, medallions, borders,
+     gradients — is still --color-candy, so the page keeps its pastel look. */
+  --color-berry: #c0395a; /* accent text, links, active nav, primary button */
+  --color-berry-deep: #a42e4b; /* primary button hover — white on it is 6.84 */
+
+  --color-cocoa: #7b3b2f; /* headings */
+  --color-mocha: #96574d; /* body copy */
+
+  --font-display: var(--font-nunito), ui-rounded, "Segoe UI", system-ui, sans-serif;
+  --font-sans: var(--font-nunito-sans), ui-rounded, "Segoe UI", system-ui, sans-serif;
+
+  --radius-card: 1.75rem;
+  --radius-pill: 999px;
+
+  --shadow-soft: 0 18px 45px -28px rgba(123, 59, 47, 0.35);
+  --shadow-lift: 0 26px 60px -30px rgba(123, 59, 47, 0.45);
+  --shadow-pill: 0 12px 24px -12px rgba(192, 57, 90, 0.55);
+
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-bob: bob 3.5s ease-in-out infinite;
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-14px);
+    }
+  }
+
+  @keyframes bob {
+    0%,
+    100% {
+      transform: translateY(0) rotate(-2deg);
+    }
+    50% {
+      transform: translateY(-8px) rotate(2deg);
+    }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Sticky header height + breathing room for #anchor jumps. */
+    scroll-padding-top: 6.5rem;
+  }
+
+  body {
+    background-color: var(--color-cream);
+    color: var(--color-mocha);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    color: var(--color-cocoa);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background-color: var(--color-candy);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-berry);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  /* Honour the OS setting instead of animating regardless. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@utility container-tezzy {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 80rem;
+  padding-inline: 1.25rem;
+
+  @media (width >= 40rem) {
+    padding-inline: 2rem;
+  }
+
+  @media (width >= 64rem) {
+    padding-inline: 2.5rem;
+  }
+}
+
+/* The soft cloud silhouettes along the bottom of the hero in the mockup.
+   White rather than cream so they read against the blush gradient, and always
+   painted behind page content. */
+@utility clouds {
+  --cloud: rgba(255, 255, 255, 0.85);
+  background-image: radial-gradient(70px 40px at 8% 104%, var(--cloud) 0%, transparent 72%),
+    radial-gradient(104px 56px at 24% 108%, var(--cloud) 0%, transparent 72%),
+    radial-gradient(82px 46px at 39% 104%, var(--cloud) 0%, transparent 72%),
+    radial-gradient(120px 62px at 58% 110%, var(--cloud) 0%, transparent 72%),
+    radial-gradient(90px 48px at 80% 105%, var(--cloud) 0%, transparent 72%);
+  background-repeat: no-repeat;
+}
